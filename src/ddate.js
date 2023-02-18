@@ -30,7 +30,7 @@ class Ddate {
       },
       tibsDay: 'День святого Тиба',
       text: ({ isToday, dayOfWeek, seasonDay, season, yold, celebrateHoliday }) => {
-        return `${isToday ? 'Сегодня ' : ''}${dayOfWeek}, ${seasonDay} день ${season}, ${yold} YOLD.` +
+        return `${isToday ? 'Сегодня ' : ''}${dayOfWeek}, ${seasonDay} день ${season}, YOLD ${yold}.` +
             (celebrateHoliday ? ` Праздник ${celebrateHoliday}.` : '');
 
       },
@@ -68,7 +68,7 @@ class Ddate {
       },
       tibsDay: "St. Tib's Day",
       text: ({ isToday, dayOfWeek, seasonDay, season, yold, celebrateHoliday }) => {
-        return `${isToday ? 'Today is ' : ''}${dayOfWeek}, ${seasonDay} day of ${season}, ${yold} YOLD.` +
+        return `${isToday ? 'Today is ' : ''}${dayOfWeek}, ${seasonDay} day of ${season} in the YOLD ${yold}` +
             (celebrateHoliday ? ` Holiday of ${celebrateHoliday}.` : '');
 
       },
@@ -100,6 +100,7 @@ class Ddate {
       throw new Error(Ddate.#dictionary[this.locale].errors.wrong_type);
     }
 
+    // TODO: check use
     this.day = value.getDate();
     this.month = value.getMonth();
     this.year = value.getFullYear();
@@ -122,6 +123,12 @@ class Ddate {
     if ((year & 3) !== 0) return false;
 
     return ((year % 100) !== 0 || (year % 400) === 0);
+  };
+
+  isToday(date) {
+    return date.getDate() === this.today.getDate() &&
+        date.getMonth() === this.today.getMonth() &&
+        date.getFullYear() === this.today.getFullYear();
   };
 
   // TODO: convert to static function
@@ -150,12 +157,6 @@ class Ddate {
     return this.#dayCount[mn] + this.today.getDate();
   };
 
-  isToday(date) {
-    return date.getDate() === this.today.getDate() &&
-        date.getMonth() === this.today.getMonth() &&
-        date.getFullYear() === this.today.getFullYear();
-  };
-
   discordianDate(date = this.today) {
     const yold = date.getFullYear() + 1166;
 
@@ -173,7 +174,7 @@ class Ddate {
 
     const divDay = Math.floor(dayOfYear / 73),
         dayOfWeek = Ddate.#dictionary[this.locale].weekday[dayOfYear % 5],
-        seasonDay = (dayOfYear % 73) + 1,
+        seasonDay = this._numberize((dayOfYear % 73) + 1),
         season = Ddate.#dictionary[this.locale].seasons[divDay];
 
     if ([5, 50].includes(seasonDay)) {
