@@ -39,12 +39,7 @@ class Ddate {
         yold,
         celebrateHoliday,
       }) => {
-        return (
-          `${
-            isToday ? 'Сегодня ' : ''
-          }${dayOfWeek}, ${seasonDay} день ${season}, YOLD ${yold}.` +
-          (celebrateHoliday ? ` Праздник ${celebrateHoliday}.` : '')
-        );
+        return `${isToday ? 'Сегодня ' : ''}${dayOfWeek}, ${seasonDay} день ${season}, YOLD ${yold}.${celebrateHoliday ? ` Праздник ${celebrateHoliday}.` : ''}`;
       },
       numberize: (num) => {
         return (num += 'й');
@@ -83,25 +78,21 @@ class Ddate {
         yold,
         celebrateHoliday,
       }) => {
-        return (
-          `${
-            isToday ? 'Today is ' : ''
-          }${dayOfWeek}, the ${seasonDay} day of ${season} in the YOLD ${yold}` +
-          (celebrateHoliday ? ` Holiday of ${celebrateHoliday}.` : '')
-        );
+        return `${isToday ? 'Today is ' : ''}${dayOfWeek}, the ${seasonDay} day of ${season} in the YOLD ${yold}.${celebrateHoliday ? ` Holiday of ${celebrateHoliday}.` : ''}`;
       },
       numberize: (num) => {
-        const dec = num % 100 > 9 && num % 100 < 15,
+        const dec = (num % 100) > 9 && (num % 100) < 15,
           declination = ['st', 'nd', 'rd', 'th'];
 
-        return (num += declination[dec > 1 && dec < 4 ? dec - 1 : 3]);
+        return num += declination[num % 10 >= 1 && num % 10 <= 4 && !dec ? num % 10 - 1 : 3];
       },
     },
   };
 
+  static #dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+
   #locale;
   #today;
-  static #dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
   set locale(value) {
     if (!Object.keys(Ddate.#dictionary).includes(value)) value = 'en';
@@ -142,14 +133,6 @@ class Ddate {
     return year % 100 !== 0 || year % 400 === 0;
   }
 
-  isToday(date) {
-    return (
-      date.getDate() === this.day &&
-      date.getMonth() === this.month &&
-      date.getFullYear() === this.year
-    );
-  }
-
   static getDayOfYear(date = this.today) {
     const mn = date.getMonth();
 
@@ -158,7 +141,16 @@ class Ddate {
     if (mn > 1 && Ddate.isLeapYear(date)) {
       dayOfYear++;
     }
+
     return dayOfYear;
+  }
+
+  isToday(date) {
+    return (
+      date.getDate() === this.day &&
+      date.getMonth() === this.month &&
+      date.getFullYear() === this.year
+    );
   }
 
   discordianDate(date = this.today) {
@@ -181,14 +173,11 @@ class Ddate {
       season = Ddate.#dictionary[this.locale].seasons[divDay];
 
     if ([5, 50].includes(seasonDay)) {
-      celebrateHoliday =
-        Ddate.#dictionary[this.locale][seasonDay === 5 ? 'apostle' : 'holiday'][
-          divDay
-        ];
+      celebrateHoliday = Ddate.#dictionary[this.locale][seasonDay === 5 ? 'apostle' : 'holiday'][divDay];
     }
 
-    if (dayOfWeek === undefined)
-      return new Error(Ddate.#dictionary[this.locale].errors.wrong_date);
+    // TODO: check use
+    if (dayOfWeek === undefined) return new Error(Ddate.#dictionary[this.locale].errors.wrong_date);
 
     const text = Ddate.#dictionary[this.locale].text({
       isToday: this.isToday(date),
@@ -259,9 +248,7 @@ class Ddate {
             out += '\t';
             break;
           case '{':
-            if (tabby)
-              tibsing =
-                (out += Ddate.#dictionary[this.locale].tibsDay) !== Infinity;
+            if (tabby) tibsing = (out += Ddate.#dictionary[this.locale].tibsDay) !== Infinity;
             break;
           case '.':
             out += Ddate.#dictionary[this.locale].texts.nothing_say;
