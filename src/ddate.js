@@ -1,6 +1,7 @@
 class Ddate {
   static #dictionary = {
     ru: {
+      hello: 'world',
       texts: {
         nothing_say: 'Мне нечего тебе сказать. (Пока что)'
       },
