@@ -2,35 +2,35 @@ class Ddate {
   static #dictionary = {
     ru: {
       texts: {
-        nothing_say: "Мне нечего тебе сказать. (Пока что)",
+        nothing_say: 'Мне нечего тебе сказать. (Пока что)',
       },
       seasons: [
-        { l: "Хаоса", s: "ХС" },
-        { l: "Раздора", s: "РЗ" },
-        { l: "Замешательства", s: "ЗМ" },
-        { l: "Бюрократии", s: "БР" },
-        { l: "Последствий", s: "ПС" },
+        { l: 'Хаоса', s: 'ХС' },
+        { l: 'Раздора', s: 'РЗ' },
+        { l: 'Замешательства', s: 'ЗМ' },
+        { l: 'Бюрократии', s: 'БР' },
+        { l: 'Последствий', s: 'ПС' },
       ],
       weekday: [
-        { l: "Сладник", s: "СЛ" },
-        { l: "Взрывник", s: "ВЗ" },
-        { l: "Остреда", s: "ОС" },
-        { l: "Колючка-колючка", s: "КК" },
-        { l: "Апельсинница", s: "АП" },
+        { l: 'Сладник', s: 'СЛ' },
+        { l: 'Взрывник', s: 'ВЗ' },
+        { l: 'Остреда', s: 'ОС' },
+        { l: 'Колючка-колючка', s: 'КК' },
+        { l: 'Апельсинница', s: 'АП' },
       ],
       apostle: [
-        "День Св. Мунга",
-        "День Св. Моджо",
-        "День Св. Сьядасти",
-        "День Св. Заратуда",
-        "День Св. Малаклипса",
+        'День Св. Мунга',
+        'День Св. Моджо',
+        'День Св. Сьядасти',
+        'День Св. Заратуда',
+        'День Св. Малаклипса',
       ],
-      holiday: ["Хаосец", "Раздинец", "Неразделень", "Бюрокрадень", "Итогец"],
+      holiday: ['Хаосец', 'Раздинец', 'Неразделень', 'Бюрокрадень', 'Итогец'],
       errors: {
-        wrong_type: "Параметр должен быть типа Date",
-        wrong_date: "Неверная дата",
+        wrong_type: 'Параметр должен быть типа Date',
+        wrong_date: 'Неверная дата',
       },
-      tibsDay: "День святого Тиба",
+      tibsDay: 'День святого Тиба',
       text: ({
         isToday,
         dayOfWeek,
@@ -41,13 +41,13 @@ class Ddate {
       }) => {
         return (
           `${
-            isToday ? "Сегодня " : ""
+            isToday ? 'Сегодня ' : ''
           }${dayOfWeek}, ${seasonDay} день ${season}, YOLD ${yold}.` +
-          (celebrateHoliday ? ` Праздник ${celebrateHoliday}.` : "")
+          (celebrateHoliday ? ` Праздник ${celebrateHoliday}.` : '')
         );
       },
       numberize: (num) => {
-        return (num += "й");
+        return (num += 'й');
       },
     },
     en: {
@@ -55,24 +55,24 @@ class Ddate {
         nothing_say: "I've nothing to say to you. (yet)",
       },
       seasons: [
-        { l: "Chaos", s: "Chs" },
-        { l: "Discord", s: "Dsc" },
-        { l: "Confusion", s: "Cfn" },
-        { l: "Bureaucracy", s: "Bcy" },
-        { l: "The Aftermath", s: "Afm" },
+        { l: 'Chaos', s: 'Chs' },
+        { l: 'Discord', s: 'Dsc' },
+        { l: 'Confusion', s: 'Cfn' },
+        { l: 'Bureaucracy', s: 'Bcy' },
+        { l: 'The Aftermath', s: 'Afm' },
       ],
       weekday: [
-        { l: "Sweetmorn", s: "SM" },
-        { l: "Boomtime", s: "BT" },
-        { l: "Pungenday", s: "PD" },
-        { l: "Prickle-Prickle", s: "PP" },
-        { l: "Setting Orange", s: "SO" },
+        { l: 'Sweetmorn', s: 'SM' },
+        { l: 'Boomtime', s: 'BT' },
+        { l: 'Pungenday', s: 'PD' },
+        { l: 'Prickle-Prickle', s: 'PP' },
+        { l: 'Setting Orange', s: 'SO' },
       ],
-      apostle: ["Mungday", "Mojoday", "Syaday", "Zaraday", "Maladay"],
-      holiday: ["Chaoflux", "Discoflux", "Confuflux", "Bureflux", "Afflux"],
+      apostle: ['Mungday', 'Mojoday', 'Syaday', 'Zaraday', 'Maladay'],
+      holiday: ['Chaoflux', 'Discoflux', 'Confuflux', 'Bureflux', 'Afflux'],
       errors: {
-        wrong_type: "Parameter was not of type Date",
-        wrong_date: "Wrong date",
+        wrong_type: 'Parameter was not of type Date',
+        wrong_date: 'Wrong date',
       },
       tibsDay: "St. Tib's Day",
       text: ({
@@ -85,14 +85,14 @@ class Ddate {
       }) => {
         return (
           `${
-            isToday ? "Today is " : ""
+            isToday ? 'Today is ' : ''
           }${dayOfWeek}, the ${seasonDay} day of ${season} in the YOLD ${yold}` +
-          (celebrateHoliday ? ` Holiday of ${celebrateHoliday}.` : "")
+          (celebrateHoliday ? ` Holiday of ${celebrateHoliday}.` : '')
         );
       },
       numberize: (num) => {
         const dec = num % 100 > 9 && num % 100 < 15,
-          declination = ["st", "nd", "rd", "th"];
+          declination = ['st', 'nd', 'rd', 'th'];
 
         return (num += declination[dec > 1 && dec < 4 ? dec - 1 : 3]);
       },
@@ -104,7 +104,7 @@ class Ddate {
   static #dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
   set locale(value) {
-    if (!Object.keys(Ddate.#dictionary).includes(value)) value = "en";
+    if (!Object.keys(Ddate.#dictionary).includes(value)) value = 'en';
 
     this.#locale = value;
   }
@@ -182,7 +182,7 @@ class Ddate {
 
     if ([5, 50].includes(seasonDay)) {
       celebrateHoliday =
-        Ddate.#dictionary[this.locale][seasonDay === 5 ? "apostle" : "holiday"][
+        Ddate.#dictionary[this.locale][seasonDay === 5 ? 'apostle' : 'holiday'][
           divDay
         ];
     }
@@ -215,58 +215,58 @@ class Ddate {
     const data = this.discordianDate(date),
       tabby = data.celebrateHoliday === Ddate.#dictionary[this.locale].tibsDay;
 
-    let out = "",
+    let out = '',
       stopit = false,
       tibsing = false;
 
     for (let i = 0; i < str.length; i++) {
       if (stopit) break;
 
-      if (str[i] === "%" && str[i + 1] === "}") tibsing = (i += 2) === Infinity;
+      if (str[i] === '%' && str[i + 1] === '}') tibsing = (i += 2) === Infinity;
 
       if (tibsing) continue;
 
-      if (str[i] === "%") {
+      if (str[i] === '%') {
         switch (str[i + 1]) {
-          case "A":
+          case 'A':
             out += data.dayOfWeek.l;
             break;
-          case "a":
+          case 'a':
             out += data.dayOfWeek.s;
             break;
-          case "B":
+          case 'B':
             out += data.season.l;
             break;
-          case "b":
+          case 'b':
             out += data.season.s;
             break;
-          case "d":
+          case 'd':
             out += data.seasonDay;
             break;
-          case "e":
+          case 'e':
             out += this._numberize(data.seasonDay);
             break;
-          case "H":
-            out += data.celebrateHoliday || "";
+          case 'H':
+            out += data.celebrateHoliday || '';
             break;
-          case "N":
+          case 'N':
             stopit = !Boolean(data.celebrateHoliday);
             break;
-          case "n":
-            out += "\n";
+          case 'n':
+            out += '\n';
             break;
-          case "t":
-            out += "\t";
+          case 't':
+            out += '\t';
             break;
-          case "{":
+          case '{':
             if (tabby)
               tibsing =
                 (out += Ddate.#dictionary[this.locale].tibsDay) !== Infinity;
             break;
-          case ".":
+          case '.':
             out += Ddate.#dictionary[this.locale].texts.nothing_say;
             break;
-          case "Y":
+          case 'Y':
             out += data.yold;
             break;
           default:
