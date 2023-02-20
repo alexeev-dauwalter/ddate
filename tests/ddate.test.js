@@ -2,6 +2,7 @@ const { Ddate } = require('../src/ddate');
 
 // const { describe, test, expect } = require('@jest/globals');
 
+// TODO: describe the tests in more detail
 describe('Ddate', () => {
   const ddate = new Ddate(new Date(2023, 1, 17)),
     ddateEn = new Ddate(new Date(2023, 1, 17), 'en'),
@@ -111,6 +112,7 @@ describe('Ddate', () => {
 
       test('getDayOfYear', () => {
         expect(Ddate.getDayOfYear(new Date(2023, 1, 17))).toEqual(48);
+        expect(Ddate.getDayOfYear(new Date(2020, 2, 1))).toEqual(60);
       });
     });
   });
