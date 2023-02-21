@@ -28,7 +28,6 @@ class Ddate {
       holiday: ['Хаосец', 'Раздинец', 'Неразделень', 'Бюрокрадень', 'Итогец'],
       errors: {
         wrong_type: 'Параметр должен быть типа Date',
-        wrong_date: 'Неверная дата',
       },
       tibsDay: 'День святого Тиба',
       text: ({
@@ -67,7 +66,6 @@ class Ddate {
       holiday: ['Chaoflux', 'Discoflux', 'Confuflux', 'Bureflux', 'Afflux'],
       errors: {
         wrong_type: 'Parameter was not of type Date',
-        wrong_date: 'Wrong date',
       },
       tibsDay: "St. Tib's Day",
       text: ({
@@ -138,10 +136,6 @@ class Ddate {
 
     let dayOfYear = this.#dayCount[mn] + date.getDate();
 
-    if (mn > 1 && Ddate.isLeapYear(date)) {
-      dayOfYear++;
-    }
-
     return dayOfYear;
   }
 
@@ -157,15 +151,7 @@ class Ddate {
     const yold = date.getFullYear() + 1166;
 
     let dayOfYear = Ddate.getDayOfYear(date),
-      celebrateHoliday = null;
-
-    if (Ddate.isLeapYear(date)) {
-      if (dayOfYear === 60) {
-        celebrateHoliday = Ddate.#dictionary[this.locale].tibsDay;
-      } else if (dayOfYear > 60) {
-        dayOfYear--;
-      }
-    }
+      celebrateHoliday;
 
     const divDay = Math.floor(dayOfYear / 73),
       dayOfWeek = Ddate.#dictionary[this.locale].weekday[(dayOfYear - 1) % 5],
@@ -174,10 +160,9 @@ class Ddate {
 
     if ([5, 50].includes(seasonDay)) {
       celebrateHoliday = Ddate.#dictionary[this.locale][seasonDay === 5 ? 'apostle' : 'holiday'][divDay];
+    } else if (Ddate.isLeapYear(date) && dayOfYear === 60) {
+      celebrateHoliday = Ddate.#dictionary[this.locale].tibsDay;
     }
-
-    // TODO: check use
-    if (dayOfWeek === undefined) return new Error(Ddate.#dictionary[this.locale].errors.wrong_date);
 
     const text = Ddate.#dictionary[this.locale].text({
       isToday: this.isToday(date),
@@ -189,6 +174,7 @@ class Ddate {
     });
 
     return {
+      dayOfYear,
       dayOfWeek,
       seasonDay,
       season,
@@ -228,6 +214,9 @@ class Ddate {
             break;
           case 'b':
             out += data.season.s;
+            break;
+          case 'D':
+            out += data.dayOfYear;
             break;
           case 'd':
             out += data.seasonDay;
