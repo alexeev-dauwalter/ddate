@@ -2,6 +2,86 @@ const { Ddate } = require('../src/ddate');
 
 // const { describe, test, expect } = require('@jest/globals');
 
+const dictionary = {
+  ru: {
+    texts: {
+      nothing_say: 'Мне нечего тебе сказать. (Пока что)',
+    },
+    seasons: [
+      { l: 'Хаоса', s: 'ХС' },
+      { l: 'Раздора', s: 'РЗ' },
+      { l: 'Замешательства', s: 'ЗМ' },
+      { l: 'Бюрократии', s: 'БР' },
+      { l: 'Последствий', s: 'ПС' },
+    ],
+    weekday: [
+      { l: 'Сладник', s: 'СЛ' },
+      { l: 'Взрывник', s: 'ВЗ' },
+      { l: 'Остреда', s: 'ОС' },
+      { l: 'Колючка-колючка', s: 'КК' },
+      { l: 'Апельсинница', s: 'АП' },
+    ],
+    apostle: [
+      'День Св. Мунга',
+      'День Св. Моджо',
+      'День Св. Сьядасти',
+      'День Св. Заратуда',
+      'День Св. Малаклипса',
+    ],
+    holiday: ['Хаосец', 'Раздинец', 'Неразделень', 'Бюрокрадень', 'Итогец'],
+    errors: {
+      wrong_type: 'Параметр должен быть типа Date',
+    },
+    tibsDay: 'День святого Тиба'
+  },
+  en: {
+    texts: {
+      nothing_say: "I've nothing to say to you. (yet)",
+    },
+    seasons: [
+      { l: 'Chaos', s: 'Chs' },
+      { l: 'Discord', s: 'Dsc' },
+      { l: 'Confusion', s: 'Cfn' },
+      { l: 'Bureaucracy', s: 'Bcy' },
+      { l: 'The Aftermath', s: 'Afm' },
+    ],
+    weekday: [
+      { l: 'Sweetmorn', s: 'SM' },
+      { l: 'Boomtime', s: 'BT' },
+      { l: 'Pungenday', s: 'PD' },
+      { l: 'Prickle-Prickle', s: 'PP' },
+      { l: 'Setting Orange', s: 'SO' },
+    ],
+    apostle: ['Mungday', 'Mojoday', 'Syaday', 'Zaraday', 'Maladay'],
+    holiday: ['Chaoflux', 'Discoflux', 'Confuflux', 'Bureflux', 'Afflux'],
+    errors: {
+      wrong_type: 'Parameter was not of type Date',
+    },
+    tibsDay: "St. Tib's Day"
+  },
+};
+
+const holidays = {
+  5: [
+    { month: 0, day: 5 },
+    { month: 2, day: 19 },
+    { month: 4, day: 31 },
+    { month: 7, day: 12 },
+    { month: 9, day: 24 },
+  ],
+  50: [
+    { month: 1, day: 19 },
+    { month: 4, day: 3 },
+    { month: 6, day: 15 },
+    { month: 8, day: 26 },
+    { month: 11, day: 8 },
+  ],
+  tibsDay: {
+    month: 1,
+    day: 29
+  }
+}
+
 // TODO: describe the tests in more detail
 describe('Ddate', () => {
   const ddate = new Ddate(new Date(2023, 1, 17)),
@@ -47,153 +127,125 @@ describe('Ddate', () => {
         expect(ddate.isToday(new Date(2023, 1, 18))).toBeFalsy();
       });
 
-
       describe('discordianDate', () => {
         describe('default', () => {
-          describe('Holidays', () => {
-            describe('5', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 0, 5)).discordianDate().celebrateHoliday).toEqual('Mungday');
-                expect(new Ddate(new Date(2021, 2, 19)).discordianDate().celebrateHoliday).toEqual('Mojoday');
-                expect(new Ddate(new Date(2021, 4, 31)).discordianDate().celebrateHoliday).toEqual('Syaday');
-                expect(new Ddate(new Date(2021, 7, 12)).discordianDate().celebrateHoliday).toEqual('Zaraday');
-                expect(new Ddate(new Date(2021, 9, 24)).discordianDate().celebrateHoliday).toEqual('Maladay');
-              });
+          const locale = null,
+            langDict = dictionary[locale ?? 'en'];
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 0, 5)).discordianDate().celebrateHoliday).toEqual('Mungday');
-                expect(new Ddate(new Date(2020, 2, 19)).discordianDate().celebrateHoliday).toEqual('Mojoday');
-                expect(new Ddate(new Date(2020, 4, 31)).discordianDate().celebrateHoliday).toEqual('Syaday');
-                expect(new Ddate(new Date(2020, 7, 12)).discordianDate().celebrateHoliday).toEqual('Zaraday');
-                expect(new Ddate(new Date(2020, 9, 24)).discordianDate().celebrateHoliday).toEqual('Maladay');
-              });
+          describe(`Holidays`, () => {
+            describe('5', () => {
+              for (const date in holidays[5]) {
+                test(`Not Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[5][date].month, holidays[5][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.apostle[date]);
+                });
+
+                test(`Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[5][date].month, holidays[5][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.apostle[date]);
+                });
+              }
             });
 
             describe('50', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 19)).discordianDate().celebrateHoliday).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2021, 4, 3)).discordianDate().celebrateHoliday).toEqual('Discoflux');
-                expect(new Ddate(new Date(2021, 6, 15)).discordianDate().celebrateHoliday).toEqual('Confuflux');
-                expect(new Ddate(new Date(2021, 8, 26)).discordianDate().celebrateHoliday).toEqual('Bureflux');
-                expect(new Ddate(new Date(2021, 11, 8)).discordianDate().celebrateHoliday).toEqual('Afflux');
-              });
+              for (const date in holidays[50]) {
+                test(`Not Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[50][date].month, holidays[50][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.holiday[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 1, 19)).discordianDate().celebrateHoliday).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2020, 4, 3)).discordianDate().celebrateHoliday).toEqual('Discoflux');
-                expect(new Ddate(new Date(2020, 6, 15)).discordianDate().celebrateHoliday).toEqual('Confuflux');
-                expect(new Ddate(new Date(2020, 8, 26)).discordianDate().celebrateHoliday).toEqual('Bureflux');
-                expect(new Ddate(new Date(2020, 11, 8)).discordianDate().celebrateHoliday).toEqual('Afflux');
-              });
+                test(`Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[50][date].month, holidays[50][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.holiday[date]);
+                });
+              }
             });
 
             describe("St. Tib's Day", () => {
               test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 29)).discordianDate().celebrateHoliday).toEqual(undefined);
+                expect(new Ddate(new Date(2021, holidays.tibsDay.month, holidays.tibsDay.day), locale).discordianDate().celebrateHoliday).toEqual(undefined);
               });
 
               test('Leap Year', () => {
-                expect(new Ddate(tibsDay).discordianDate().celebrateHoliday).toEqual("St. Tib's Day");
+                expect(new Ddate(new Date(2020, holidays.tibsDay.month, holidays.tibsDay.day), locale).discordianDate().celebrateHoliday).toEqual(langDict.tibsDay);
               });
             });
           });
         });
 
         describe('en', () => {
-          describe('Holidays', () => {
-            describe('5', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 0, 5), 'en').discordianDate().celebrateHoliday).toEqual('Mungday');
-                expect(new Ddate(new Date(2021, 2, 19), 'en').discordianDate().celebrateHoliday).toEqual('Mojoday');
-                expect(new Ddate(new Date(2021, 4, 31), 'en').discordianDate().celebrateHoliday).toEqual('Syaday');
-                expect(new Ddate(new Date(2021, 7, 12), 'en').discordianDate().celebrateHoliday).toEqual('Zaraday');
-                expect(new Ddate(new Date(2021, 9, 24), 'en').discordianDate().celebrateHoliday).toEqual('Maladay');
-              });
+          const locale = 'en',
+            langDict = dictionary[locale ?? 'en'];
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 0, 5), 'en').discordianDate().celebrateHoliday).toEqual('Mungday');
-                expect(new Ddate(new Date(2020, 2, 19), 'en').discordianDate().celebrateHoliday).toEqual('Mojoday');
-                expect(new Ddate(new Date(2020, 4, 31), 'en').discordianDate().celebrateHoliday).toEqual('Syaday');
-                expect(new Ddate(new Date(2020, 7, 12), 'en').discordianDate().celebrateHoliday).toEqual('Zaraday');
-                expect(new Ddate(new Date(2020, 9, 24), 'en').discordianDate().celebrateHoliday).toEqual('Maladay');
-              });
+          describe(`Holidays`, () => {
+            describe('5', () => {
+              for (const date in holidays[5]) {
+                test(`Not Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[5][date].month, holidays[5][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.apostle[date]);
+                });
+
+                test(`Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[5][date].month, holidays[5][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.apostle[date]);
+                });
+              }
             });
 
             describe('50', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 19), 'en').discordianDate().celebrateHoliday).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2021, 4, 3), 'en').discordianDate().celebrateHoliday).toEqual('Discoflux');
-                expect(new Ddate(new Date(2021, 6, 15), 'en').discordianDate().celebrateHoliday).toEqual('Confuflux');
-                expect(new Ddate(new Date(2021, 8, 26), 'en').discordianDate().celebrateHoliday).toEqual('Bureflux');
-                expect(new Ddate(new Date(2021, 11, 8), 'en').discordianDate().celebrateHoliday).toEqual('Afflux');
-              });
+              for (const date in holidays[50]) {
+                test(`Not Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[50][date].month, holidays[50][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.holiday[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 1, 19), 'en').discordianDate().celebrateHoliday).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2020, 4, 3), 'en').discordianDate().celebrateHoliday).toEqual('Discoflux');
-                expect(new Ddate(new Date(2020, 6, 15), 'en').discordianDate().celebrateHoliday).toEqual('Confuflux');
-                expect(new Ddate(new Date(2020, 8, 26), 'en').discordianDate().celebrateHoliday).toEqual('Bureflux');
-                expect(new Ddate(new Date(2020, 11, 8), 'en').discordianDate().celebrateHoliday).toEqual('Afflux');
-              });
+                test(`Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[50][date].month, holidays[50][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.holiday[date]);
+                });
+              }
             });
 
             describe("St. Tib's Day", () => {
               test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 29), 'en').discordianDate().celebrateHoliday).toEqual(undefined);
+                expect(new Ddate(new Date(2021, holidays.tibsDay.month, holidays.tibsDay.day), locale).discordianDate().celebrateHoliday).toEqual(undefined);
               });
 
               test('Leap Year', () => {
-                expect(new Ddate(tibsDay, 'en').discordianDate().celebrateHoliday).toEqual("St. Tib's Day");
+                expect(new Ddate(new Date(2020, holidays.tibsDay.month, holidays.tibsDay.day), locale).discordianDate().celebrateHoliday).toEqual(langDict.tibsDay);
               });
             });
           });
         });
 
         describe('ru', () => {
-          describe('Holidays', () => {
-            describe('5', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 0, 5), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Мунга');
-                expect(new Ddate(new Date(2021, 2, 19), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Моджо');
-                expect(new Ddate(new Date(2021, 4, 31), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Сьядасти');
-                expect(new Ddate(new Date(2021, 7, 12), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Заратуда');
-                expect(new Ddate(new Date(2021, 9, 24), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Малаклипса');
-              });
+          const locale = 'ru',
+            langDict = dictionary[locale ?? 'en'];
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 0, 5), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Мунга');
-                expect(new Ddate(new Date(2020, 2, 19), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Моджо');
-                expect(new Ddate(new Date(2020, 4, 31), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Сьядасти');
-                expect(new Ddate(new Date(2020, 7, 12), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Заратуда');
-                expect(new Ddate(new Date(2020, 9, 24), 'ru').discordianDate().celebrateHoliday).toEqual('День Св. Малаклипса');
-              });
+          describe(`Holidays`, () => {
+            describe('5', () => {
+              for (const date in holidays[5]) {
+                test(`Not Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[5][date].month, holidays[5][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.apostle[date]);
+                });
+
+                test(`Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[5][date].month, holidays[5][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.apostle[date]);
+                });
+              }
             });
 
             describe('50', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 19), 'ru').discordianDate().celebrateHoliday).toEqual('Хаосец');
-                expect(new Ddate(new Date(2021, 4, 3), 'ru').discordianDate().celebrateHoliday).toEqual('Раздинец');
-                expect(new Ddate(new Date(2021, 6, 15), 'ru').discordianDate().celebrateHoliday).toEqual('Неразделень');
-                expect(new Ddate(new Date(2021, 8, 26), 'ru').discordianDate().celebrateHoliday).toEqual('Бюрокрадень');
-                expect(new Ddate(new Date(2021, 11, 8), 'ru').discordianDate().celebrateHoliday).toEqual('Итогец');
-              });
+              for (const date in holidays[50]) {
+                test(`Not Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[50][date].month, holidays[50][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.holiday[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 1, 19), 'ru').discordianDate().celebrateHoliday).toEqual('Хаосец');
-                expect(new Ddate(new Date(2020, 4, 3), 'ru').discordianDate().celebrateHoliday).toEqual('Раздинец');
-                expect(new Ddate(new Date(2020, 6, 15), 'ru').discordianDate().celebrateHoliday).toEqual('Неразделень');
-                expect(new Ddate(new Date(2020, 8, 26), 'ru').discordianDate().celebrateHoliday).toEqual('Бюрокрадень');
-                expect(new Ddate(new Date(2020, 11, 8), 'ru').discordianDate().celebrateHoliday).toEqual('Итогец');
-              });
+                test(`Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[50][date].month, holidays[50][date].day), locale).discordianDate().celebrateHoliday).toEqual(langDict.holiday[date]);
+                });
+              }
             });
 
             describe("St. Tib's Day", () => {
               test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 29), 'ru').discordianDate().celebrateHoliday).toEqual(undefined);
+                expect(new Ddate(new Date(2021, holidays.tibsDay.month, holidays.tibsDay.day), locale).discordianDate().celebrateHoliday).toEqual(undefined);
               });
 
               test('Leap Year', () => {
-                expect(new Ddate(tibsDay, 'ru').discordianDate().celebrateHoliday).toEqual('День святого Тиба');
+                expect(new Ddate(new Date(2020, holidays.tibsDay.month, holidays.tibsDay.day), locale).discordianDate().celebrateHoliday).toEqual(langDict.tibsDay);
               });
             });
           });
@@ -202,6 +254,9 @@ describe('Ddate', () => {
 
       describe('format', () => {
         describe('default', () => {
+          const locale = null,
+            langDict = dictionary[locale ?? 'en'];
+
           test('Parameters', () => {
             const ddateTest = new Ddate(tibsDay);
 
@@ -227,63 +282,54 @@ describe('Ddate', () => {
             expect(ddateTest.format('%Y')).toEqual('3186');
           });
 
-          describe('Holidays', () => {
+          describe(`Holidays`, () => {
             describe('5', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 0, 5)).format('%H')).toEqual('Mungday');
-                expect(new Ddate(new Date(2021, 2, 19)).format('%H')).toEqual('Mojoday');
-                expect(new Ddate(new Date(2021, 4, 31)).format('%H')).toEqual('Syaday');
-                expect(new Ddate(new Date(2021, 7, 12)).format('%H')).toEqual('Zaraday');
-                expect(new Ddate(new Date(2021, 9, 24)).format('%H')).toEqual('Maladay');
-              });
+              for (const date in holidays[5]) {
+                test(`Not Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[5][date].month, holidays[5][date].day), locale).format('%H')).toEqual(langDict.apostle[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 0, 5)).format('%H')).toEqual('Mungday');
-                expect(new Ddate(new Date(2020, 2, 19)).format('%H')).toEqual('Mojoday');
-                expect(new Ddate(new Date(2020, 4, 31)).format('%H')).toEqual('Syaday');
-                expect(new Ddate(new Date(2020, 7, 12)).format('%H')).toEqual('Zaraday');
-                expect(new Ddate(new Date(2020, 9, 24)).format('%H')).toEqual('Maladay');
-              });
+                test(`Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[5][date].month, holidays[5][date].day), locale).format('%H')).toEqual(langDict.apostle[date]);
+                });
+              }
             });
 
             describe('50', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 19)).format('%H')).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2021, 4, 3)).format('%H')).toEqual('Discoflux');
-                expect(new Ddate(new Date(2021, 6, 15)).format('%H')).toEqual('Confuflux');
-                expect(new Ddate(new Date(2021, 8, 26)).format('%H')).toEqual('Bureflux');
-                expect(new Ddate(new Date(2021, 11, 8)).format('%H')).toEqual('Afflux');
-              });
+              for (const date in holidays[50]) {
+                test(`Not Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[50][date].month, holidays[50][date].day), locale).format('%H')).toEqual(langDict.holiday[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 1, 19)).format('%H')).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2020, 4, 3)).format('%H')).toEqual('Discoflux');
-                expect(new Ddate(new Date(2020, 6, 15)).format('%H')).toEqual('Confuflux');
-                expect(new Ddate(new Date(2020, 8, 26)).format('%H')).toEqual('Bureflux');
-                expect(new Ddate(new Date(2020, 11, 8)).format('%H')).toEqual('Afflux');
-              });
+                test(`Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[50][date].month, holidays[50][date].day), locale).format('%H')).toEqual(langDict.holiday[date]);
+                });
+              }
             });
 
             describe("St. Tib's Day", () => {
               test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 29)).format('%H')).toEqual('');
+                expect(new Ddate(new Date(2021, holidays.tibsDay.month, holidays.tibsDay.day), locale).format('%H')).toEqual('');
               });
 
               test('Leap Year', () => {
-                expect(new Ddate(tibsDay).format('%H')).toEqual("St. Tib's Day");
+                expect(new Ddate(new Date(2020, holidays.tibsDay.month, holidays.tibsDay.day), locale).format('%H')).toEqual(langDict.tibsDay);
               });
             });
           });
         });
 
         describe('en', () => {
+          const locale = null,
+            langDict = dictionary[locale ?? 'en'];
+
           test('Parameters', () => {
             const ddateTest = new Ddate(tibsDay, 'en');
 
             expect(ddateEn.format('Today is %{%A, the %e of %B%}, %Y.%N%nCelebrate %H')).toEqual('Today is Pungenday, the 48th of Chaos, 3189.');
             expect(ddateTest.format('Today is %{%A, the %e of %B%}, %Y.')).toEqual("Today is St. Tib's Day, 3186.");
             expect(new Ddate(new Date(2021, 0, 5), 'en').format('Today is %{%A, the %e of %B%}, %Y.%N%nCelebrate %H')).toEqual('Today is Setting Orange, the 5th of Chaos, 3187.\nCelebrate Mungday');
-          
+
             expect(ddateTest.format('%A')).toEqual('Setting Orange');
             expect(ddateTest.format('%a')).toEqual('SO');
             expect(ddateTest.format('%B')).toEqual('Chaos');
@@ -302,56 +348,47 @@ describe('Ddate', () => {
             expect(ddateTest.format('%Y')).toEqual('3186');
           });
 
-          describe('Holidays', () => {
+          describe(`Holidays`, () => {
             describe('5', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 0, 5), 'en').format('%H')).toEqual('Mungday');
-                expect(new Ddate(new Date(2021, 2, 19), 'en').format('%H')).toEqual('Mojoday');
-                expect(new Ddate(new Date(2021, 4, 31), 'en').format('%H')).toEqual('Syaday');
-                expect(new Ddate(new Date(2021, 7, 12), 'en').format('%H')).toEqual('Zaraday');
-                expect(new Ddate(new Date(2021, 9, 24), 'en').format('%H')).toEqual('Maladay');
-              });
+              for (const date in holidays[5]) {
+                test(`Not Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[5][date].month, holidays[5][date].day), locale).format('%H')).toEqual(langDict.apostle[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 0, 5), 'en').format('%H')).toEqual('Mungday');
-                expect(new Ddate(new Date(2020, 2, 19), 'en').format('%H')).toEqual('Mojoday');
-                expect(new Ddate(new Date(2020, 4, 31), 'en').format('%H')).toEqual('Syaday');
-                expect(new Ddate(new Date(2020, 7, 12), 'en').format('%H')).toEqual('Zaraday');
-                expect(new Ddate(new Date(2020, 9, 24), 'en').format('%H')).toEqual('Maladay');
-              });
+                test(`Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[5][date].month, holidays[5][date].day), locale).format('%H')).toEqual(langDict.apostle[date]);
+                });
+              }
             });
 
             describe('50', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 19), 'en').format('%H')).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2021, 4, 3), 'en').format('%H')).toEqual('Discoflux');
-                expect(new Ddate(new Date(2021, 6, 15), 'en').format('%H')).toEqual('Confuflux');
-                expect(new Ddate(new Date(2021, 8, 26), 'en').format('%H')).toEqual('Bureflux');
-                expect(new Ddate(new Date(2021, 11, 8), 'en').format('%H')).toEqual('Afflux');
-              });
+              for (const date in holidays[50]) {
+                test(`Not Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[50][date].month, holidays[50][date].day), locale).format('%H')).toEqual(langDict.holiday[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 1, 19), 'en').format('%H')).toEqual('Chaoflux');
-                expect(new Ddate(new Date(2020, 4, 3), 'en').format('%H')).toEqual('Discoflux');
-                expect(new Ddate(new Date(2020, 6, 15), 'en').format('%H')).toEqual('Confuflux');
-                expect(new Ddate(new Date(2020, 8, 26), 'en').format('%H')).toEqual('Bureflux');
-                expect(new Ddate(new Date(2020, 11, 8), 'en').format('%H')).toEqual('Afflux');
-              });
+                test(`Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[50][date].month, holidays[50][date].day), locale).format('%H')).toEqual(langDict.holiday[date]);
+                });
+              }
             });
 
             describe("St. Tib's Day", () => {
               test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 29), 'en').format('%H')).toEqual('');
+                expect(new Ddate(new Date(2021, holidays.tibsDay.month, holidays.tibsDay.day), locale).format('%H')).toEqual('');
               });
 
               test('Leap Year', () => {
-                expect(new Ddate(tibsDay, 'en').format('%H')).toEqual("St. Tib's Day");
+                expect(new Ddate(new Date(2020, holidays.tibsDay.month, holidays.tibsDay.day), locale).format('%H')).toEqual(langDict.tibsDay);
               });
             });
           });
         });
 
         describe('ru', () => {
+          const locale = null,
+            langDict = dictionary[locale ?? 'en'];
+
           test('Parameters', () => {
             const ddateTest = new Ddate(tibsDay, 'ru')
 
@@ -377,55 +414,42 @@ describe('Ddate', () => {
             expect(ddateTest.format('%Y')).toEqual('3186');
           });
 
-          describe('Holidays', () => {
+          describe(`Holidays`, () => {
             describe('5', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 0, 5), 'ru').format('%H')).toEqual('День Св. Мунга');
-                expect(new Ddate(new Date(2021, 2, 19), 'ru').format('%H')).toEqual('День Св. Моджо');
-                expect(new Ddate(new Date(2021, 4, 31), 'ru').format('%H')).toEqual('День Св. Сьядасти');
-                expect(new Ddate(new Date(2021, 7, 12), 'ru').format('%H')).toEqual('День Св. Заратуда');
-                expect(new Ddate(new Date(2021, 9, 24), 'ru').format('%H')).toEqual('День Св. Малаклипса');
-              });
+              for (const date in holidays[5]) {
+                test(`Not Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[5][date].month, holidays[5][date].day), locale).format('%H')).toEqual(langDict.apostle[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 0, 5), 'ru').format('%H')).toEqual('День Св. Мунга');
-                expect(new Ddate(new Date(2020, 2, 19), 'ru').format('%H')).toEqual('День Св. Моджо');
-                expect(new Ddate(new Date(2020, 4, 31), 'ru').format('%H')).toEqual('День Св. Сьядасти');
-                expect(new Ddate(new Date(2020, 7, 12), 'ru').format('%H')).toEqual('День Св. Заратуда');
-                expect(new Ddate(new Date(2020, 9, 24), 'ru').format('%H')).toEqual('День Св. Малаклипса');
-              });
+                test(`Leap Year - ${langDict.apostle[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[5][date].month, holidays[5][date].day), locale).format('%H')).toEqual(langDict.apostle[date]);
+                });
+              }
             });
 
             describe('50', () => {
-              test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 19), 'ru').format('%H')).toEqual('Хаосец');
-                expect(new Ddate(new Date(2021, 4, 3), 'ru').format('%H')).toEqual('Раздинец');
-                expect(new Ddate(new Date(2021, 6, 15), 'ru').format('%H')).toEqual('Неразделень');
-                expect(new Ddate(new Date(2021, 8, 26), 'ru').format('%H')).toEqual('Бюрокрадень');
-                expect(new Ddate(new Date(2021, 11, 8), 'ru').format('%H')).toEqual('Итогец');
-              });
+              for (const date in holidays[50]) {
+                test(`Not Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2021, holidays[50][date].month, holidays[50][date].day), locale).format('%H')).toEqual(langDict.holiday[date]);
+                });
 
-              test('Leap Year', () => {
-                expect(new Ddate(new Date(2020, 1, 19), 'ru').format('%H')).toEqual('Хаосец');
-                expect(new Ddate(new Date(2020, 4, 3), 'ru').format('%H')).toEqual('Раздинец');
-                expect(new Ddate(new Date(2020, 6, 15), 'ru').format('%H')).toEqual('Неразделень');
-                expect(new Ddate(new Date(2020, 8, 26), 'ru').format('%H')).toEqual('Бюрокрадень');
-                expect(new Ddate(new Date(2020, 11, 8), 'ru').format('%H')).toEqual('Итогец');
-              });
+                test(`Leap Year - ${langDict.holiday[date]}`, () => {
+                  expect(new Ddate(new Date(2020, holidays[50][date].month, holidays[50][date].day), locale).format('%H')).toEqual(langDict.holiday[date]);
+                });
+              }
             });
 
             describe("St. Tib's Day", () => {
               test('Not Leap Year', () => {
-                expect(new Ddate(new Date(2021, 1, 29), 'ru').format('%H')).toEqual('');
+                expect(new Ddate(new Date(2021, holidays.tibsDay.month, holidays.tibsDay.day), locale).format('%H')).toEqual('');
               });
 
               test('Leap Year', () => {
-                expect(new Ddate(tibsDay, 'ru').format('%H')).toEqual('День святого Тиба');
+                expect(new Ddate(new Date(2020, holidays.tibsDay.month, holidays.tibsDay.day), locale).format('%H')).toEqual(langDict.tibsDay);
               });
             });
           });
         });
-
       });
     });
 
