@@ -118,6 +118,7 @@ class Ddate {
     return this.#today;
   }
 
+  // TODO: Overloading the constructor to create a date from a discordian date string
   constructor(date, locale) {
     this.locale = locale;
     this.today = date ?? new Date();
