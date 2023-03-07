@@ -1,11 +1,15 @@
 {
-  "name": "ddate",
+  "name": "@41t/ddate",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "test": "jest"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Ishi Inanis <ishi.inanis@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.4.3"
+  }
 }
