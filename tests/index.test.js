@@ -1,4 +1,4 @@
-const { Ddate } = require('../src/ddate');
+const { Ddate } = require('../src/index');
 
 // const { describe, test, expect } = require('@jest/globals');
 
