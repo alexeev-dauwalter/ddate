@@ -156,7 +156,7 @@ class Ddate {
 
     const divDay = Math.floor(dayOfYear / 73),
       dayOfWeek = Ddate.#dictionary[this.locale].weekday[(dayOfYear - 1) % 5],
-      seasonDay = dayOfYear % 73,
+      seasonDay = dayOfYear % 73 === 0 ? dayOfYear : dayOfYear % 73,
       season = Ddate.#dictionary[this.locale].seasons[divDay];
 
     if ([5, 50].includes(seasonDay)) {
